@@ -1,0 +1,60 @@
+version: "3.2"
+services:
+#   application:
+#     image: ubuntu:bionic
+# #    volumes:
+# #      - ./project:/var/www/project
+#     tty: true
+#     container_name: knb_application
+
+  apache:
+    build: ./docker/apache
+    ports:
+      - 8080:80
+      - 8000:8000
+    volumes:
+      - ./docker/config/vhosts:/etc/apache2/sites-enabled
+      - ./project:/var/www/project
+    networks:
+      - frontend
+      - backend
+    container_name: knb_apache
+
+  db:
+#    image: "mysql:latest"
+    image: "mariadb:10.4"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./data/mysqldb:/var/lib/mysql
+    networks:
+      - backend
+    container_name: knb_db
+
+  php:
+    build: ./docker/php
+    volumes:
+      - ./project:/var/www/project:Z
+    ports:
+      - 9000
+    networks:
+      - frontend
+      - backend
+    container_name: knb_php
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - 8081:80
+    networks:
+      - frontend
+      - backend
+    container_name: knb_phpmyadmin
+volumes:
+  mysqldb:  {}
+networks:
+  frontend:
+  backend:
