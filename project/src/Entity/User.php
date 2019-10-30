@@ -80,6 +80,12 @@ class User implements UserInterface
      */
     private $articles;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Rank", inversedBy="users")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $rank;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -115,6 +121,9 @@ class User implements UserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
+		if($this->rank !== null) {
+			$roles = ["ROLE_".$rank->getCode()];
+		}
 
         return array_unique($roles);
     }
@@ -281,6 +290,18 @@ class User implements UserInterface
                 $article->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRank(): ?Rank
+    {
+        return $this->rank;
+    }
+
+    public function setRank(?Rank $rank): self
+    {
+        $this->rank = $rank;
 
         return $this;
     }

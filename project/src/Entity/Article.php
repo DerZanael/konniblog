@@ -66,9 +66,15 @@ class Article
      */
     private $status;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Content", mappedBy="article", orphanRemoval=true)
+     */
+    private $contents;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->contents = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -194,6 +200,37 @@ class Article
     public function setStatus(?Status $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Content[]
+     */
+    public function getContents(): Collection
+    {
+        return $this->contents;
+    }
+
+    public function addContent(Content $content): self
+    {
+        if (!$this->contents->contains($content)) {
+            $this->contents[] = $content;
+            $content->setArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContent(Content $content): self
+    {
+        if ($this->contents->contains($content)) {
+            $this->contents->removeElement($content);
+            // set the owning side to null (unless already changed)
+            if ($content->getArticle() === $this) {
+                $content->setArticle(null);
+            }
+        }
 
         return $this;
     }
