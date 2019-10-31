@@ -1,4 +1,5 @@
 {% extends "base.html.twig" %}
+{% set logged = (is_granted("IS_AUTHENTICATED_REMEMBERED")) %}
 {# This is the base template file for all your FRONT pages, edit to you liking the block contents #}
 
 {% block title %}{{blog_name}}{% endblock title %}
@@ -20,11 +21,28 @@
 
 {# header block for menu etc #}
 {% block header %}
-
-{% endblock header %}
 <header>
-
+	<div class="container">
+		<nav class="navbar navbar-expand-md bg-primary navbar-dark">
+			<a class="navbar-brand" href="{{path("homepage")}}">{{blog_name}}</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle menu"><i class="fa fa-bars"></i> <span class="sr-only">Menu</span></button>
+			<div class="collapse navbar-collapse" id="main-menu">
+				{{render(controller("App\\Controller\\HomeController::menu"))}}
+				{% if logged and is_granted("ROLE_ADMIN") %}
+					<a href="#" class="btn btn-danger mr-2" title="Access administration dashboard"><i class="fa fa-lock"></i> Administration</a>
+				{% endif %}
+				{% if logged %}
+					<a href="{{path("app_logout")}}" class="btn btn-warning" title="Log out"><i class="fa fa-sign-out-alt"></i> Log out</a>
+				{% else %}
+					{% if not nologin|default(false) %}
+						<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-login" id="modal-login-button" title="Log in"><i class="fa fa-user"></i> Log in</button>
+					{% endif %}
+				{% endif %}
+			</div>
+		</nav>
+	</div>
 </header>
+{% endblock header %}
 
 {# main content block, wrapping in bootstrap's .container class #}
 {% block contents %}
@@ -42,6 +60,30 @@
 
 </footer>
 {% endblock footer %}
+
+{# Modals go here #}
+{% block modals %}
+{% if not logged and not nologin|default(false) %}
+	<div class="modal fade" id="modal-login" tabindex="-1" role="dialog" aria-labelledby="modal-login-header" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="modal-login-header">Log in</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+			  {{include("security/login_form.html.twig")}}
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+{% endif %}
+{% endblock modals %}
 
 {# local JS scripts that don't require a file #}
 {% block jslocal %}

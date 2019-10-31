@@ -71,6 +71,16 @@ class Article
      */
     private $contents;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $allowComments;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $featured;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -231,6 +241,30 @@ class Article
                 $content->setArticle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAllowComments(): ?bool
+    {
+        return $this->allowComments;
+    }
+
+    public function setAllowComments(bool $allowComments): self
+    {
+        $this->allowComments = $allowComments;
+
+        return $this;
+    }
+
+    public function getFeatured(): ?bool
+    {
+        return $this->featured;
+    }
+
+    public function setFeatured(bool $featured): self
+    {
+        $this->featured = $featured;
 
         return $this;
     }

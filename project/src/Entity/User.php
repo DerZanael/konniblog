@@ -122,7 +122,7 @@ class User implements UserInterface
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 		if($this->rank !== null) {
-			$roles = ["ROLE_".$rank->getCode()];
+			$roles = ["ROLE_".$this->rank->getCode()];
 		}
 
         return array_unique($roles);

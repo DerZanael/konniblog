@@ -18,4 +18,12 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
+	
+	public function menu(Request $request) {
+
+		return $this->render("home/menu.html.twig", [
+
+		]);
+	}
 }
