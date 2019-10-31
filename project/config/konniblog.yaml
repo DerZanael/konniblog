@@ -1,12 +1,12 @@
 parameters:
-    blog_file_edited: true
-    blog_name: 'Konniblog test'
-    blog_description: 'this is a test'
-    blog_email: contact@fdweb.fr
+    blog_file_edited: false
+    blog_name: 'Your website name'
+    blog_description: 'Your website description'
+    blog_email: email@yourwebsite.com
     blog_allowusers: true
-    blog_validateusers: true
-    blog_email_onregistration: true
+    blog_validateusers: false
+    blog_email_onregistration: false
     blog_allowcomments: true
     blog_allowanonymous: true
-    blog_validatecomments: true
-    blog_email_oncomment: true
+    blog_validatecomments: false
+    blog_email_oncomment: false
