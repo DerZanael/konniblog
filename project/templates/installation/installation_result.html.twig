@@ -1,0 +1,57 @@
+{% extends "base.html.twig" %}
+{% block title %}Your Konniblog has been installed ! (maybe){% endblock title %}
+{% set allerrors = (error_remove_installationdist and error_edit_websiteconfig and error_database) %}
+{% set haserrors = (error_remove_installationdist or error_edit_websiteconfig or error_database) %}
+{% block contents %}
+<div class="container">
+	<div class="alert alert-{{(allerrors) ? "danger" : (haserrors) ? "warning" : "info"}} my-4">
+		{% if allerrors %}
+			<p class="lead">Your konniblog couldn't be installed</p>
+			<p class="mb-0">The installation script couldn't complete. Please check the errors below and retry the installation process.</p>
+		{% elseif haserrors %}
+			<p class="lead">The installation encountered some errors</p>
+			<p class="mb-0">Checks the errors below{% if error_database %} and retry the installation process{% endif %}.</p>
+		{% else %}
+			<p class="lead">Your konniblog has been installed</p>
+			<p class="mb-0">Everything went great! You can now browse your blog, log in, and create your first articles, have fun ;)</p>
+		{% endif %}
+	</div>
+
+	{% if error_database %}
+	<div class="alert alert-danger my-4">
+		<p>
+			Your user couldn't be created, please make sure the database url is correctly configured in your <code>.env.local.php</code> file, and that your database is correctly set up.
+			<br>If you encounter troubles, please refer to the <code>README.md</code> file for instructions on the initial set up of the project, or refer to the symfony documentation.
+		</p>
+		<ul class="mb-0">
+			<li><a href="https://symfony.com/doc/current/configuration.html#configuration-environments" title="Symfony documentation : environments">Configuring your symfony environment</a></li>
+			<li><a href="https://symfony.com/doc/current/doctrine.html#migrations-creating-the-database-tables-schema" title="Symfony documentation : databases">Creating the database schema</a></li>
+		</ul>
+	</div>
+	{% endif %}
+
+	{% if error_edit_websiteconfig %}
+	<p class="alert alert-danger my-4">
+		The <code>/config/konniblog.yaml</code> file couln't be updated.
+		{% if allerrors %}<br>Please make sure the <code>www-data</code> user (or your webserver user) has read/write permissions on the file (usually 0755 or 0775).
+		{% else %}<br>You can manually edit the file with your ftp client and a text editor to update each parameter, or replace the file contents with the following code :
+			<br><textarea class="form-control">{{yaml_contents}}</textarea>
+		{% endif %}
+	</p>
+	{% endif %}
+
+	{% if error_remove_installationdist %}
+	<p class="alert alert-warning my-4">
+		The <code>/public/installation.dist</code> file couldn't be removed. {% if not allerrors %}Please remove it manually to browse your website{% endif %}
+	</p>
+	{% endif %}
+
+	<p class="text-center my-4">
+		{% if allerrors or error_database %}
+		<a href="{{path("installation")}}" title="Retry the installation process" class="btn btn-lg btn-warning"><i class="fa fa-undo-alt"></i> Retry the installation process</a>
+		{% else %}
+		<a href="{{path("homepage")}}" title="Go to your homepage" class="btn btn-lg btn-success"><i class="fa fa-home"></i> Go to your homepage</a>
+		{% endif %}
+	</p>
+</div>
+{% endblock contents %}

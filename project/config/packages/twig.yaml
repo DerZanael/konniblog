@@ -2,3 +2,16 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    form_themes: ['bootstrap_4_layout.html.twig']
+
+    globals:
+        blog_name: "%blog_name%"
+        blog_description: "%blog_description%"
+        blog_email: "%blog_email%"
+        blog_allowusers: "%blog_allowusers%"
+        blog_validateusers: "%blog_validateusers%"
+        blog_email_onregistration: "%blog_email_onregistration%"
+        blog_allowcomments: "%blog_allowcomments%"
+        blog_allowanonymous: "%blog_allowanonymous%"
+        blog_validatecomments: "%blog_validatecomments%"
+        blog_email_oncomment: "%blog_email_oncomment%"

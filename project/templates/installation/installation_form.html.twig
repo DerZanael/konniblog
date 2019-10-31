@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Start your KonniBlog installation{% endblock %}
+
+{% block contents %}
+<div class="container">
+	<h1 class="my-4">Install your KonniBlog</h1>
+	<p class="alert alert-info">
+		Hello and thank you for using KonniBlog ;)
+		<br>First thing first, we'll create your user, define basic publishing options, and set your website's parameters
+	</p>
+
+	{% if not writable_install %}
+	<p class="alert alert-warning">
+		<i class="fa fa-exclamation-triangle fa-fw"></i> The <code>/public/installation.dist</code> file is not writeable, you will have to delete it manually <strong>at the end of the installation process</strong>
+		<br><small>You can change the permissions of the file to <code>0775</code> for the <code>www-data</code> user and reload the page</small> <button type="button" class="btn btn-warning btn-sm reload"><i class="fa fa-sync-alt"></i> Reload</button>
+	</p>
+	{% endif %}
+
+	{{form_start(form)}}
+		<h2>Your account</h2>
+		<p class="text-muted">We'll create a superadmin account with your information</p>
+		{{form_row(form.firstname)}}
+		{{form_row(form.lastname)}}
+		{{form_row(form.email)}}
+		{{form_row(form.username)}}
+		{{form_row(form.password)}}
+
+		<h2>Website contents</h2>
+		<p class="text-muted">You will be able to change them afterwards</p>
+		{{form_row(form.category)}}
+		{{form_row(form.tag)}}
+
+		<h2>Website parameters</h2>
+		<p class="text-muted">General website parameters, you can change them anytime in the <code>/config/konniblog.yaml</code> file at the root of your website</p>
+		{% if not writable_config %}
+		<p class="alert alert-warning">
+			<i class="fa fa-exclamation-triangle fa-fw"></i> The <code>/config/konniblog.yaml</code> file is not writeable, you will have to update it manually <strong>at the end of the installation process</strong>
+			<br><small>You can change the permissions of the file to <code>0775</code> for the <code>www-data</code> user and reload the page</small> <button type="button" class="btn btn-warning reload"><i class="fa fa-sync-alt"></i> Reload</button>
+		</p>
+		{% endif %}
+		{{form_row(form.blog_name)}}
+		{{form_row(form.blog_description)}}
+		{{form_row(form.blog_email)}}
+		<h3>Users</h3>
+		{{form_row(form.blog_allowusers)}}
+		{{form_row(form.blog_validateusers)}}
+		{{form_row(form.blog_email_onregistration)}}
+		<h3>Comments</h3>
+		{{form_row(form.blog_allowcomments)}}
+		{{form_row(form.blog_allowanonymous)}}
+		{{form_row(form.blog_validatecomments)}}
+		{{form_row(form.blog_email_oncomment)}}
+		<p class="text-center mt-4">
+			<button type="submit" class="btn btn-lg btn-primary"><i class="fa fa-cog"></i> Finish installation</button>
+		</p>
+	{{form_end(form)}}
+</div>
+{% endblock contents %}
+{% block jslocal %}
+{{parent()}}
+<script>
+$(document).ready(function(){
+	$(".reload").click(function(){
+		$(this).find("[data-fa-i2svg]").addClass("fa-spin");
+		document.location.href = document.location.href;
+	});
+	$("form").submit(function(e){
+		$(this).find("button[type='submit'] [data-fa-i2svg]").addClass("fa-spin");
+	})
+});
+</script>
+{% endblock %}

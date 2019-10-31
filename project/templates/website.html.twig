@@ -1,0 +1,49 @@
+{% extends "base.html.twig" %}
+{# This is the base template file for all your FRONT pages, edit to you liking the block contents #}
+
+{% block title %}{{blog_name}}{% endblock title %}
+
+{# Metadatas for each page, don't forget to do a {{parent()}} in your templates #}
+{% block metadatas %}
+<meta name="description" content="{{blog_description}}">
+{% endblock metadatas %}
+
+{# Add your custom stylesheets for the FRONT pages here #}
+{% block stylesheets %}
+
+{% endblock stylesheets %}
+
+{# add your JS libs and files here #}
+{% block javascripts %}
+
+{% endblock javascripts %}
+
+{# header block for menu etc #}
+{% block header %}
+
+{% endblock header %}
+<header>
+
+</header>
+
+{# main content block, wrapping in bootstrap's .container class #}
+{% block contents %}
+<main id="main-content">
+	<div class="container">
+		{# Your page content goes here #}
+		{% block body %}{% endblock body %}
+	</div>
+</main>
+{% endblock contents %}
+
+{# Your footer block #}
+{% block footer %}
+<footer>
+
+</footer>
+{% endblock footer %}
+
+{# local JS scripts that don't require a file #}
+{% block jslocal %}
+
+{% endblock %}
