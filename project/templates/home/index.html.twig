@@ -1,5 +1,20 @@
 {% extends 'website.html.twig' %}
 
 {% block body %}
-Ola !
+{% for article in featuredArticles %}
+
+{% endfor %}
+
+{% for article in latestArticles %}
+
+{% else %}
+<p class="alert alert-info">
+	<span class="lead">No articles yet, please come back later!</span>
+	{% if is_granted("ROLE_ADMIN") %}
+	<br>
+	<br>You can post a new article from your admin dashboard
+	<br><a href="{{path("administration")}}" class="btn btn-success" title="Post a new article"><i class="fa fa-file-signature"></i> Write something</a>
+	{% endif %}
+</p>
+{% endfor %}
 {% endblock %}

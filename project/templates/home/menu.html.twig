@@ -1,4 +1,4 @@
-{% set routename = app.request.get("_route") %}
+
 <ul class="navbar-nav mr-auto">
 	<li class="nav-item{{(routename in ["home", "homepage"]) ? " active"}}"><a href={{path("homepage")}} class="nav-link">Homepage</a></li>
 </ul>

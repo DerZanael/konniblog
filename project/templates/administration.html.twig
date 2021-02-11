@@ -1,0 +1,71 @@
+{% extends "base.html.twig" %}
+{% import "common/macros_admin.html.twig" as admac %}
+{% set inadmin = true %}
+{% set logged = (is_granted("IS_AUTHENTICATED_REMEMBERED")) %}
+{% set routename = app.request.get("_route") %}
+{# This is the base template file for all your BACKOFFICE pages, edit to you liking the block contents #}
+
+{% block title %}Administration {{blog_name}}{% endblock title %}
+
+{# Add your custom stylesheets for the BACKOFFICE pages here #}
+{% block stylesheets %}
+
+{% endblock stylesheets %}
+
+{# add your JS libs and files here #}
+{% block javascripts %}
+
+{% endblock javascripts %}
+
+{# header block for menu etc #}
+{% block header %}
+<header>
+	<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+		<a class="navbar-brand" href="{{path("administration")}}">Administration</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu" aria-controls="main-menu" aria-expanded="false" aria-label="Toggle menu"><i class="fa fa-bars"></i> <span class="sr-only">Menu</span></button>
+		<div class="collapse navbar-collapse" id="main-menu">
+			<ul class="navbar-nav mr-auto">
+				{% if is_granted("ROLE_MODERATOR") %}
+					<li class="nav-item{{(routename in ["administration", "admin_dashboard"]) ? " active"}}"><a href="{{path("admin_dashboard")}}" title="Go to the administration dashboard" class="nav-link"><i class="fa fa-tachometer-alt"></i> Dashboard</a></li>
+				{% endif %}
+			</ul>
+			{% if is_granted("ROLE_ADMIN") %}
+				<a href="#" class="btn btn-success mr-2" title="Write something"><i class="fa fa-file-signature"></i> New article</a>
+			{% endif %}
+			{% if logged %}
+				<a href="{{path("homepage")}}" class="btn btn-primary mr-2" title="Go to the frontpage"><i class="fa fa-home"></i> Homepage</a>
+				<a href="{{path("app_logout")}}" class="btn btn-warning" title="Log out"><i class="fa fa-sign-out-alt"></i> Log out</a>
+			{% endif %}
+		</div>
+	</nav>
+</header>
+{% endblock header %}
+
+{# main content block, wrapping in bootstrap's .container class #}
+{% block contents %}
+<main id="main-content">
+	<div class="container-fluid">
+		{# Your page content goes here #}
+		{% block body %}{% endblock body %}
+	</div>
+</main>
+{% endblock contents %}
+
+{# Your footer block #}
+{% block footer %}
+<footer>
+	<div class="container-fluid">
+
+	</div>
+</footer>
+{% endblock footer %}
+
+{# Modals go here #}
+{% block modals %}
+
+{% endblock modals %}
+
+{# local JS scripts that don't require a file #}
+{% block jslocal %}
+
+{% endblock %}

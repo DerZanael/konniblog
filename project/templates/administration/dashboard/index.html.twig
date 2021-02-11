@@ -1,0 +1,76 @@
+{% extends 'administration.html.twig' %}
+
+{% block title %}Admin dashboard - {{blog_name}}{% endblock %}
+
+{% block body %}
+	<h1 class="my-4">{{blog_name}} administration dashboard</h1>
+	<div class="row">
+		<div class="col-12 col-md-4">
+			<div class="card">
+				<div class="card-body">
+					<h2>Welcome, {{app.user.username}}</h2>
+					<p>You are logged as a <span class="text-primary">{{app.user.rank.code|lower|capitalize}}</span>.
+						<br>You can :</p>
+					<ul>
+					{% if is_granted("ROLE_SUPERADMIN") %}
+						<li>Manage website preferences</li>
+						<li>Manage users ranks</li>
+					{% endif %}
+					{% if is_granted("ROLE_ADMIN") %}
+						{% if blog_allowusers %}<li>Manager users</li>{% endif %}
+						<li>Publish and manage articles</li>
+					{% endif %}
+					{% if is_granted("ROLE_MODERATOR") and blog_allowcomments %}
+						<li>Manage article comments</li>
+					{% endif %}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		{# COMMENTS #}
+		{% if is_granted("ROLE_MODERATOR") and blog_allowcomments %}
+		<div class="col-12 col-md-{{(is_granted("ROLE_ADMIN")) ? 4 : 8}}">
+			{# Comments to approve #}
+			{% if blog_validatecomments %}
+			<div class="card mb-2">
+				<div class="card-header">
+					<h3 class="card-title">New comments</h3>
+				</div>
+				{{_self.commentlist(commentsToApprove, "No comments to review yet")}}
+			</div>
+			{% endif %}
+			{# Latest comments #}
+			<div class="card">
+				<div class="card-header">
+					<h2 class="card-title">Latest comments</h2>
+				</div>
+				{{_self.commentlist(commentsLatest, "No comments yet")}}
+				<div class="card-footer">
+					<a href="#" class="btn btn-primary" title="Manage comments"><i class="fa fa-comments"></i> All comments</a>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% macro commentlist(comments, alt = null) %}
+	{% for comment in comments %}
+		{% if loop.first %}
+		<ul class="list-group list-group-flush">
+		{% endif %}
+			<li class="list-group-item">
+				comment info
+			</li>
+		{% if loop.last %}
+		</ul>
+		{% endif %}
+	{% else %}
+		{% if alt is not null %}
+		<div class="card-body">
+			<p class="alert alert-warning">{{alt}}</p>
+		</div>
+		{% endif %}
+	{% endfor %}
+{% endmacro commentlist %}

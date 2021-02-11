@@ -11,6 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Status
 {
+	const CODE_PUBLISHED = "PUBLISHED";
+	const CODE_DRAFT = "DRAFT";
+	const CODE_ARCHIVED = "ARCHIVED";
+	const CODE_DELETED = "DELETED";
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use App\Entity\Status;
 
 /**
  * @method Article|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,6 +19,49 @@ class ArticleRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Article::class);
     }
+
+	/**
+	 * Base query builder to get published articles
+	 */
+	public function getArticlesPublished() {
+		$q = $this->createQueryBuilder("a")
+			->join("a.status", "stat")
+			->andWhere("stat.code = :status")->setParameter("status", Status::CODE_PUBLISHED)
+			->addOrderBy("a.publishDate", "desc");
+		return $q;
+	}
+
+	/**
+	 * Get features articles
+	 * @param int $nb number of returned articles
+	 */
+	public function getFeatured($nb = 5) {
+		return $this->getArticlesPublished()
+			->andWhere("a.featured = true")
+			->setMaxResults($nb)
+			->getQuery()->getResult();
+	}
+
+	/**
+	 * Get the latest articles published
+	 * @param int $nb number of returned articles
+	 */
+	public function getLatest($nb = 5) {
+		return $this->getArticlesPublished()
+			->setMaxResults($nb)
+			->getQuery()->getResult();
+	}
+
+	/**
+	 * Get the number of published articles
+	 * @return int number of articles
+	 */
+	public function numPublished() {
+		return $this->getArticlesPublished()
+			->select("COUNT(a.id)")
+			->getQuery()
+			->getSingleScalarResult();
+	}
 
     // /**
     //  * @return Article[] Returns an array of Article objects

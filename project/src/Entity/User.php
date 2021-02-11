@@ -86,9 +86,21 @@ class User implements UserInterface
      */
     private $rank;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="author", orphanRemoval=true)
+     */
+    private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\ModAction", mappedBy="moderator", orphanRemoval=true)
+     */
+    private $modActions;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->modActions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -302,6 +314,68 @@ class User implements UserInterface
     public function setRank(?Rank $rank): self
     {
         $this->rank = $rank;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getAuthor() === $this) {
+                $comment->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ModAction[]
+     */
+    public function getModActions(): Collection
+    {
+        return $this->modActions;
+    }
+
+    public function addModAction(ModAction $modAction): self
+    {
+        if (!$this->modActions->contains($modAction)) {
+            $this->modActions[] = $modAction;
+            $modAction->setModerator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModAction(ModAction $modAction): self
+    {
+        if ($this->modActions->contains($modAction)) {
+            $this->modActions->removeElement($modAction);
+            // set the owning side to null (unless already changed)
+            if ($modAction->getModerator() === $this) {
+                $modAction->setModerator(null);
+            }
+        }
 
         return $this;
     }
